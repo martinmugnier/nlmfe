@@ -112,7 +112,7 @@ class TwoWayFPMLE():
             self.hess_loglik_beta_indiv = func.hess_log_loglik_beta_indiv 
             keep_i = (0<np.nansum(self.b, axis=1))*(np.nansum(self.b, axis=1)<
                                     np.sum(1-np.isnan(self.b), axis=1))
-            keep_t = (0<np.nansum(self.b, axis=0))*(np.sum(self.b, axis=0)<
+            keep_t = (0<np.nansum(self.b, axis=0))*(np.nansum(self.b, axis=0)<
                                     np.sum(1-np.isnan(self.b), axis=0))
             if np.sum(keep_i)<self.N:
                 print('Dropped ', np.sum(1-keep_i), 
@@ -137,7 +137,7 @@ class TwoWayFPMLE():
             self.hess_loglik_beta_indiv = func.hess_prob_loglik_beta_indiv
             keep_i = (0<np.nansum(self.b, axis=1))*(np.nansum(self.b, axis=1)<
                                     np.sum(1-np.isnan(self.b), axis=1))
-            keep_t = (0<np.nansum(self.b, axis=0))*(np.sum(self.b, axis=0)<
+            keep_t = (0<np.nansum(self.b, axis=0))*(np.nansum(self.b, axis=0)<
                                     np.sum(1-np.isnan(self.b), axis=0))
             if np.sum(keep_i)<self.N:
                 print('Dropped ', np.sum(1-keep_i), 
