@@ -110,18 +110,18 @@ class TwoWayFPMLE():
             self.hess_loglik_fe = func.hess_log_loglik_fe
             self.hess_loglik_beta = func.hess_log_loglik_beta
             self.hess_loglik_beta_indiv = func.hess_log_loglik_beta_indiv 
-            keep_i = (0<np.nansum(self.b, axis=1))*(np.nansum(self.b, axis=1)<
-                                    np.sum(1-np.isnan(self.b), axis=1))
-            keep_t = (0<np.nansum(self.b, axis=0))*(np.nansum(self.b, axis=0)<
-                                    np.sum(1-np.isnan(self.b), axis=0))
-            if np.sum(keep_i)<self.N:
-                print('Dropped ', np.sum(1-keep_i), 
+            self.keep_i = (0<np.nansum(self.b, axis=1))*(np.nansum(self.b, 
+                            axis=1)<np.sum(1-np.isnan(self.b), axis=1))
+            self.keep_t = (0<np.nansum(self.b, axis=0))*(np.nansum(self.b, 
+                            axis=0)<np.sum(1-np.isnan(self.b), axis=0))
+            if np.sum(self.keep_i)<self.N:
+                print('Dropped ', np.sum(1-self.keep_i), 
                       ' individuals with no outcome variations')
-            if np.sum(keep_t)<self.T:
-                print('Dropped ', np.sum(1-keep_t), 
+            if np.sum(self.keep_t)<self.T:
+                print('Dropped ', np.sum(1-self.keep_t), 
                       ' time periods with no outcome variations')
-            self.A = self.A[keep_i][:,keep_t,:]
-            self.b = self.b[keep_i][:,keep_t]
+            self.A = self.A[self.keep_i][:,self.keep_t,:]
+            self.b = self.b[self.keep_i][:,self.keep_t]
             self.N, self.T, self.K = self.A.shape # make it more userfriendly (e.g., to track dropped ID)
             
         elif model == 'probit':
@@ -135,18 +135,18 @@ class TwoWayFPMLE():
             self.hess_loglik_fe = func.hess_prob_loglik_fe
             self.hess_loglik_beta = func.hess_prob_loglik_beta
             self.hess_loglik_beta_indiv = func.hess_prob_loglik_beta_indiv
-            keep_i = (0<np.nansum(self.b, axis=1))*(np.nansum(self.b, axis=1)<
-                                    np.sum(1-np.isnan(self.b), axis=1))
-            keep_t = (0<np.nansum(self.b, axis=0))*(np.nansum(self.b, axis=0)<
-                                    np.sum(1-np.isnan(self.b), axis=0))
-            if np.sum(keep_i)<self.N:
-                print('Dropped ', np.sum(1-keep_i), 
+            self.keep_i = (0<np.nansum(self.b, axis=1))*(np.nansum(self.b, 
+                            axis=1)<np.sum(1-np.isnan(self.b), axis=1))
+            self.keep_t = (0<np.nansum(self.b, axis=0))*(np.nansum(self.b, 
+                            axis=0)<np.sum(1-np.isnan(self.b), axis=0))
+            if np.sum(self.keep_i)<self.N:
+                print('Dropped ', np.sum(1-self.keep_i), 
                       ' individuals with no outcome variations')
-            if np.sum(keep_t)<self.T:
-                print('Dropped ', np.sum(1-keep_t), 
+            if np.sum(self.keep_t)<self.T:
+                print('Dropped ', np.sum(1-self.keep_t), 
                       ' time periods with no outcome variations')
-            self.A = self.A[keep_i][:,keep_t,:]
-            self.b = self.b[keep_i][:,keep_t]
+            self.A = self.A[self.keep_i][:,self.keep_t,:]
+            self.b = self.b[self.keep_i][:,self.keep_t]
             self.N, self.T, self.K = self.A.shape # make it more userfriendly (e.g., to track dropped ID)
         
         elif model == 'poisson':
@@ -157,16 +157,16 @@ class TwoWayFPMLE():
             self.hess_loglik_fe = func.hess_poiss_loglik_fe
             self.hess_loglik_beta = func.hess_poiss_loglik_beta
             self.hess_loglik_beta_indiv = func.hess_poiss_loglik_beta_indiv
-            keep_i = 0<np.nansum(self.b, axis=1)
-            keep_t = 0<np.nansum(self.b, axis=0)
-            if np.sum(keep_i)<self.N:
-                print('Dropped ', np.sum(1-keep_i), 
+            self.keep_i = 0<np.nansum(self.b, axis=1)
+            self.keep_t = 0<np.nansum(self.b, axis=0)
+            if np.sum(self.keep_i)<self.N:
+                print('Dropped ', np.sum(1-self.keep_i), 
                       ' individuals with zero outcome at all time periods.')
-            if np.sum(keep_t)<self.T:
-                print('Dropped ', np.sum(1-keep_t), 
+            if np.sum(self.keep_t)<self.T:
+                print('Dropped ', np.sum(1-self.keep_t), 
                       ' time periods with zero outcome for all individuals')
-            self.A = self.A[keep_i][:,keep_t,:]
-            self.b = self.b[keep_i][:,keep_t]
+            self.A = self.A[self.keep_i][:,self.keep_t,:]
+            self.b = self.b[self.keep_i][:,self.keep_t]
             self.N, self.T, self.K = self.A.shape # make it more userfriendly (e.g., to track dropped ID)
             
             
@@ -806,10 +806,3 @@ class TwoWayFPMLE():
                 obj_diff_list.append(obj_list[-2] - obj_list[-1])
                 niter += 1
         return beta_list[-1], alpha_list[-1][0], xi_list[-1]
-            
-            
-            
-        
-        
-        
-        
